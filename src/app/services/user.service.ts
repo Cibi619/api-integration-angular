@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { InvokeFunctionExpr } from '@angular/compiler';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { Responses } from '../interfaces/response.interface';
 import { User } from '../interfaces/user.interface';
 
@@ -15,12 +15,16 @@ export class UserService {
 
   // fetch all users
   getUsers(size: number = 10): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/?results=${size}`);
+    return this.http.get<any>(`${this.apiUrl}/?results=${size}`).pipe(
+      map(response => this.processResponse(response))
+    );
   }
 
   // fetch single user
   getUser(uid: number = 1): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/?results=${uid}`);
+    return this.http.get<any>(`${this.apiUrl}/?results=${uid}`).pipe(
+      map(response => this.processResponse(response))
+    );
   }
 
   private processResponse(response: Responses): Responses {
